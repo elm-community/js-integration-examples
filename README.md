@@ -1,4 +1,4 @@
-# Using JS with Elm
+# Using JS within Elm
 
 Not all browser APIs are covered by an official package yet. This repo has examples of common cases where people use ports or Custom Elements:
 
