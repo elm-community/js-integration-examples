@@ -6,6 +6,8 @@ This is a minimal example of how to use the `Intl` library with a custom element
 
 The important code lives in `src/Main.elm` and in `index.html` with comments!
 
+Check out [`wolfadex/fluent-web`](https://github.com/wolfadex/fluent-web/) for a more complete approach, making [Project Fluent](https://projectfluent.org/) available through custom elements.
+
 
 ## Building Locally
 
