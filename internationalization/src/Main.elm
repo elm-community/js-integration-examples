@@ -61,14 +61,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ p []
-        [ node "intl-date"
-            [ attribute "lang" model.language
-            , attribute "year" "2012"
-            , attribute "month" "5"
-            ]
-            []
-        ]
+    [ p [] [ viewDate model.language 2012 5 ]
     , select
         [ on "change" (D.map LanguageChanged valueDecoder)
         ]
@@ -77,6 +70,18 @@ view model =
         , option [ value "en-US" ] [ text "en-US" ]
         ]
     ]
+
+
+-- Use the Custom Element defined in index.html
+--
+viewDate : String -> Int -> Int -> Html msg
+viewDate lang year month =
+  node "intl-date"
+    [ attribute "lang" lang
+    , attribute "year" (String.fromInt year)
+    , attribute "month" (String.fromInt month)
+    ]
+    []
 
 
 valueDecoder : D.Decoder String
