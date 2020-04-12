@@ -1,4 +1,4 @@
-# Internationalization
+# Internationalization - [Live Demo](https://ellie-app.com/8yYbRQ3Hzrta1)
 
 This is a minimal example of how to use the `Intl` library with a custom element.
 
