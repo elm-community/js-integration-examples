@@ -1,4 +1,4 @@
-# Local Storage - [Demo](https://ellie-app.com/8yYddD6HRYJa1)
+# Local Storage - [Live Demo](https://ellie-app.com/8yYddD6HRYJa1)
 
 This is a minimal example of how to use `localStorage` through ports.
 
