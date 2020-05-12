@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Web components example</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/es6-shim@0.35.5/es6-shim.min.js"></script>
+    <script src="https://unpkg.com/@webcomponents/custom-elements"></script>
+    <script>
+
+        function AutonomousButton() {
+            return Reflect.construct(HTMLElement, [], this.constructor);
+        }
+        AutonomousButton.prototype = Object.create(HTMLElement.prototype);
+        AutonomousButton.prototype.constructor = AutonomousButton;
+        AutonomousButton.prototype.connectedCallback = function () {
+            this.appendChild(document.createTextNode("Autonomous!"));
+        };
+        Object.setPrototypeOf(AutonomousButton, HTMLElement);
+
+        customElements.define("autonomous-button", AutonomousButton);
+
+    </script>
+    <script type="module">
+        // Only for modern browsers
+        customElements.define("autonomous-bla", class extends HTMLElement {
+            connectedCallback() {
+                this.appendChild(document.createTextNode("Bla!"));
+            }
+        });
+
+        class CustomizedButton extends HTMLButtonElement {
+            connectedCallback() {
+                this.style.backgroundColor = "orange";
+            }
+        }
+        customElements.define("customized-button", CustomizedButton, {
+            extends: "button",
+        });
+    </script>
+    <autonomous-button></autonomous-button>
+    <autonomous-bla></autonomous-bla>
+    <button is="customized-button">Customized!</button>
+</body>
+
+</html>
