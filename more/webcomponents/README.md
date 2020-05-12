@@ -1,13 +1,12 @@
 # A Guide to Using Elm With Webcomponents
 
-## Motivation
-
 This document is meant to be a practical usage guide to [the various web components specs][wc-specs] with the goal to provide you with the necessary tools to interop with web APIs that are not yet covered by Elm's core packages. The reason this guide exists is that most tutorials and documentation on web components just dump all the specs and some basic usage examples on you assuming that you already know the intricate details of why specific parts of the spec exist in the first place and what use case they try to solve. This situation can be daunting even for experienced web developers and even more so for newcomers. We aim to be as concise as possible while also providing sufficient information to get you up and running in no time.
 
 First-off: if you haven't read [the official Elm guide][guide] you should do so before reading on, of particular note is [the interop section][guide-interop] as this is where the usage of [ports][guide-ports] and [custom elements][guide-custom-elements] is motivated.
 
 Now that you're up to date and positive that using web components is the way to solve the problem at your hands we'll start off with a quick summary of what people mean when they say "just use web components" followed by a rundown of the parts of [the spec][wc-specs] you'll most likely interact with when using Elm. The remainder of the guide is dedicated to getting your app ready for web components in all the browsers you want/need to support.
 
+TODO: TL;DR
 
 ## What are web components and what can I do with them?
 
@@ -19,13 +18,13 @@ To quote the first paragraph on the [web components specs page][wc-specs]
 
 This paragraph provides an elegant summary of what the web components specs have to offer but as a newcomer you may miss the most vital piece of information about web components. Instead of telling you outright what I mean let's instead have a little discussion on what the actual purpose of web components is in the first place.
 
-There's no need to bore you with all the historical details on the conception of JavaScript and its turbulent lifetime so far, the web is full of these, suffice to say "the browser" as an application delivery platform is a messy environment with all sorts of short-comings and inconsistencies across vendors. Many of these problems have been tackled with library-specific APIs, resulting in a lot of unnecessary library and/or framework lock-in and a gazillion incompatible ways to do the same thing. Good examples are the various module and package systems - like [CommonJS][module-commonjs], [AMD][module-amd], [Meteor packages][module-meteor] - and the fact that basically every library created before ES6/ES2015 has its own way to imitate class based inheritance on top of JavaScript's prototype model - [Backbone has one][oop-backbone], [base2 has one][oop-base2], [dojo had one][], [Ember has one][oop-ember], [ExtJS has one][oop-extjs], [YUI has one][oop-yui], you get the idea.
+There's no need to bore you with all the historical details on the conception of JavaScript and its turbulent lifetime so far, the web is full of these, suffice to say "the browser" as an application delivery platform is a messy environment with all sorts of short-comings and inconsistencies across vendors. Many of these problems have been tackled with library-specific APIs, resulting in a lot of unnecessary library and/or framework lock-in and a gazillion incompatible ways to do the same thing. Good examples are the various module and package systems - like [CommonJS][module-commonjs], [AMD][module-amd], [Meteor packages][module-meteor] - and the fact that basically every library created before ES6/ES2015 has its own way to imitate class based inheritance on top of JavaScript's prototype model - [Backbone has one][oop-backbone], [base2 has one][oop-base2], [dojo had one][oop-dojo], [Ember has one][oop-ember], [ExtJS has one][oop-extjs], [YUI has one][oop-yui], you get the idea.
 
 This wild west not-invented-here mentality eventually lead to the standardization and introduction of ES6 classes and the ES6 module system with the goal to provide common solutions to common problems in an interoperable way. The web components spec consists of a set of specifications aimed to address other frequently encountered issues many libraries and frameworks provide mutually incompatible APIs for, building on top of what had been introduced in ES6.
 
 To again quote the first paragraph on the [web components specs page][wc-specs]
 
-> These four specifications *can be used on their own* but combined allow developers to define their own tags (custom element), whose styles are encapsulated and isolated (shadow dom), that can be restamped many times (template), and have a consistent way of being integrated into applications (es module).
+> These four specifications __can be used on their own__ but combined allow developers to define their own tags (custom element), whose styles are encapsulated and isolated (shadow dom), that can be restamped many times (template), and have a consistent way of being integrated into applications (es module).
 
 I've emphasized the most important information: in order to "use web components" you can and should actually pick and choose what part of the spec you need in order to solve your problem. You don't need to use Shadow DOM, if you don't need style encapsulation. You don't need to use HTML templates, if you already have a templating solution. You don't need ES Modules, if you have a compile-to-js language like, say, *drumroll* Elm. You may find yourself using these specs but they aren't usually necessary in conjuction with Elm.
 
@@ -45,7 +44,7 @@ I've emphasized the most important information: in order to "use web components"
 
 Note that if at this point you skipped the earlier requests to have a look at the [interop section of the Elm guide][guide-interop] I'll try to nudge you again to do so... you may feel nudged now. 
 
-So we've looked at [the specs][wc-specs] and the one I've skipped so far is actually the spec that's most relevant to Elm: [Custom Elements][wc-custom-elements]. Looking at the examples on that page, defining a custom element is easy enough, take their example
+So we've looked at [the specs][wc-specs] and the one I've skipped so far is actually the spec that's most relevant to Elm: [Custom Elements][wc-custom-elements]. Looking at the examples on that page, defining a custom element is easy enough.
 
 ```javascript
 class AutonomousButton extends HTMLElement {
@@ -95,23 +94,23 @@ view : Model -> Html msg
 view model =
     Html.node "autonomous-button" [] [ Html.text "Awesome!" ]
 ```
+TODO: Ellie
 
 > If that's all there is to it why do I even read this guide?
 
-Glad you asked! As is usually the case, there's always more than meets the eye.
+Glad you asked! As is usually the case, there's more than meets the eye.
 
 
 ### Older Environments
 
-Our custom element works flawlessly... until we try to run the code using our fancy new `<autonomous-button>` component in Internet Explorer or some ancient mobile browser, a webview - `SyntaxError` or maybe `"customElements" is not defined`. You probably know the drill by now, off to the "browser support" page; [looks very green and ready for showbiz][wc-home] but we remember [the word "polyfill"][wc-polyfill] everybody throws around so that is what catches our eye. Then our eyes glaze over at all the polyfill-o-babble. The gist is that not every browser supports web components out-of-the-box and some implementations are buggy so you need to include a sort-of base library. After we've dutifully included [the custom elements polyfill][wc-polyfill-custom-elements] our code agrees to run inside the mobile browser (and the webview?) but Internet Explorer is relentless, as always - `SyntaxError`, bane of our existence.
+Our custom element works flawlessly... until we try to run the code using our fancy new `<autonomous-button>` component in Internet Explorer or some ancient mobile browser, a webview - `SyntaxError` or maybe `"customElements" is not defined`. You probably know the drill by now, off to the "browser support" page; [looks very green and ready for showbiz][wc-home] but we remember [the word "polyfill"][wc-polyfills] everybody throws around so that is what catches our eye. Then our eyes glaze over at all the polyfill-o-babble. The gist is that not every browser supports web components out-of-the-box and some implementations are buggy so you need to include a sort-of base library. After we've dutifully included [the custom elements polyfill][wc-polyfill-custom-elements] our code agrees to run inside the mobile browser (and the webview?) but Internet Explorer is relentless, as always - `SyntaxError`, bane of our existence.
 
-It turns out that Internet Explorer doesn't support the `class` syntax introduced in ES6, annoying. Because we know that `class` syntax is actually just syntactic sugar for ye olde function constructors and prototype chaining we begrudgingly rewrite our example component
+It turns out that Internet Explorer doesn't support the `class` syntax introduced in ES6, annoying. Because we know that `class` syntax is actually just syntactic sugar for ye olde function constructors and prototype chaining we begrudgingly rewrite our example component.
 
 ```javascript
 function AutonomousButton() {}
 AutonomousButton.prototype = Object.create(HTMLElement.prototype);
 customElements.define("autonomous-button", AutonomousButton);
-//  
 ```
 `IE: The custom element constructor did not produce the element being upgraded`, odd. After some more research we [come across the magic incantation][so-custom-elements] that makes our component appear in all browsers. Note that the polyfill detects modern browsers automatically now so we at least don't need to [patch the native implementation manually to work with ES5 style classes][wc-polyfill-custom-elements-es5], it is done for us. This means that per spec native custom element implementations only work with ES6 classes, keep that in mind!
 
@@ -161,8 +160,9 @@ customElements.define("customized-button", CustomizedButton, { extends: "button"
 <button is="customized-button">Customized!</button>
 ```
 
-If we open this in Chrome our button is indeed a button with an orange background. Safari does not concur, neither does pre-Chromium Microsoft Edge, nor [any Webkit based browser possibly forever][webkit-nope] which includes the iOS browser. "Customized built-in"s as they're called are part of the spec but may as well not be because a non-significant amount of browsers doesn't and probably won't support. Although there is [a polyfill][customized-polyfill] my advice would be to ignore that part of the spec, it's not safe to use as [is documented in this w3c issue][w3c-nope] and layering ever increasing mountains of polyfills and shims onto each other might have consequences.
+If we open this in Chrome our button is indeed a button with an orange background. Safari does not concur, neither does pre-Chromium Microsoft Edge, nor [any Webkit based browser possibly forever][webkit-nope] which includes the iOS browser. `Customized built-in` s as they're called are part of the spec but may as well not be because a non-significant amount of browsers doesn't and probably won't support them anytime soon. Although there is [a polyfill][customized-polyfill] my advice would be to ignore that part of the spec, it's not safe to use as [is documented in this w3c issue][w3c-nope] and layering ever increasing mountains of polyfills and shims onto each other might have consequences.
 
+[customized-polyfill]: https://github.com/ungap/custom-elements-builtin 
 [webkit-nope]: https://bugs.webkit.org/show_bug.cgi?id=182671 
 [w3c-nope]: https://github.com/w3c/webcomponents/issues/509 
 
