@@ -50,30 +50,170 @@ Note that if at this point you skipped the earlier requests to have a look at th
 So we've looked at [the specs][wc-specs] and the one I've skipped so far is actually the spec that's most relevant to Elm: [Custom Elements][wc-custom-elements]. Looking at the examples on that page, defining a custom element is easy enough.
 
 ```javascript
-class AutonomousButton extends HTMLElement {
-}
-customElements.define("autonomous-button", AutonomousButton);
+class MyElement extends HTMLElement {}
+customElements.define("my-element", MyElement);
 ```
 
-This unsurprisingly defines a new HTML element or tag `<autonomous-button>`. Note that the name *has* to include a hyphen and the class *needs* to extend `HTMLElement`. Here we see the raw power custom elements provide: they let you build your own HTML elements with behavior tailored to your application that are indistinguishable from built-in elements like `<input>` or `<section>`. Which in turn means we can create these kind of elements within Elm without problems, we've done it many times before.
+This unsurprisingly defines a new HTML element `<my-element>`. Note that the name *has* to include a hyphen and the class *needs* to extend `HTMLElement`. Here we see the raw power custom elements provide: they let you build your own HTML elements with behavior tailored to your application that are indistinguishable from built-in elements like `<input>` or `<section>`. Which in turn means we can create these kind of elements within Elm without problems, we've done it many times before.
 
 ```elm
 import Html
 
 view : Model -> Html msg
 view model =
-    Html.node "autonomous-button" [] [ Html.text "Awesome!" ]
+    Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
 
-### Attributes vs Properties
-TODO
+Let's have a look at the anatomy of a custom element, this should be pretty straight forward for the most part.
 
-* [ ] Attrs vs props (maybe performance)
+### Construction
+
+A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript.
+
+```javascript
+customElements.define("twbs-alert", class extends HTMLElement {});
+// ...
+const element = document.createElement("twbs-alert");
+```
+```html
+<!-- Note that custom elements can not be self-closing -->
+<twbs-alert></twbs-alert>
+```
+```elm
+import Html
+
+btn =
+    Html.node "twbs-alert" [] []
+```
+
+### Lifecycles
+
+There are lifecycles you can attach clunkily-named callbacks to.
+
+```javascript
+customElements.define("twbs-alert", class extends HTMLElement {
+    constructor() {
+        // This <twbs-alert> is being initialized, it's not been
+        // added to any document yet but you can initialize
+        // your fields
+    }
+    adoptedCallback() {
+        // This <twbs-alert> has been moved to a different document
+    }
+    connectedCallback() {
+        // This <twbs-alert> has been added to the DOM
+    }
+    disconnectedCallback() {
+        // This <twbs-alert> has been removed from the DOM
+    }
+});
+```
+
+### Attributes
+
+Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values.
+
+```javascript
+customElements.define("twbs-alert", class extends HTMLElement {
+    constructor() {
+        this.classList.add('alert')
+    }
+    static get observedAttributes() {
+        // We need to declare which attributes should be observed,
+        // only these trigger the `attributeChangedCallback`
+        return ['type'];
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        switch (name) {
+            case 'type':
+                this.classList.remove(`alert-${oldValue}`);
+                this.classList.add(`alert-${newValue}`);
+                break;
+        }
+    }
+});
+// ...
+const element = document.createElement("twbs-alert");
+element.setAttribute("type", "info");
+```
+```html
+<twbs-alert type="info"></twbs-alert>
+```
+```elm
+import Html
+import Html.Attributes
+
+element =
+    Html.node "twbs-alert"
+        [ Html.Attributes.attribute "type" "primary"
+        -- or Html.Attributes.type_ "info"
+        ]
+        []
+```
+
+If you need to transfer object data you can use a [property](#Properties).
+
+### Properties
+
+Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported.
+
+```javascript
+customElements.define("twbs-alert", class extends HTMLElement {
+    constructor() {
+        // Set up backing fields for your properties
+        this._meta = null;
+    }
+    set meta(value) {
+        // Sometimes it makes sense to "reflect" simple property values
+        // back to corresponding attribute values, if any
+        this._meta = value;
+    }
+    get meta() {
+        return this._meta;
+    }
+});
+const element = document.createElement("twbs-alert");
+element.meta = {
+    teamAvatar: ["Aang", "Katara", "Soka"],
+    seasons: 3,
+};
+```
+```html
+<!-- You can't set properties in raw HTML, sorry -->
+```
+
+With Elm you need to use a JSON encoder provided by the `elm/json` package.
+
+```elm
+import Html
+import Html.Attributes
+import Json.Encode -- elm install elm/json
+
+element =
+    Html.node "twbs-alert"
+        [ Html.Attributes.property "meta"
+            (Json.Encode.object
+                [ ( "teamAvatar"
+                  , Json.Encode.list Json.Encode.string
+                    [ "Aang"
+                    , "Katara"
+                    , "Soka"
+                    ]
+                  )
+                , ( "seasons", Json.Encode.int 3 )
+                ]
+            )
+        ]
+        []
+```
+
+
+* [ ] Attrs vs props performance
 * [ ] Handling events
 
 ### Events
 TODO
-
+[mdn-customevent-polyfill][]
 
 ### Gotchas
 TODO
@@ -82,12 +222,11 @@ And while we're talking about gotchas...
 
 ## Browser Support
 
-Looking at our example snippets you may have a very valid question
+Looking at our basic example snippets you may have a very valid question
 
 ```javascript
-class AutonomousButton extends HTMLElement {
-}
-customElements.define("autonomous-button", AutonomousButton);
+class MyElement extends HTMLElement {}
+customElements.define("my-element", MyElement);
 ```
 
 ```elm
@@ -95,7 +234,7 @@ import Html
 
 view : Model -> Html msg
 view model =
-    Html.node "autonomous-button" [] [ Html.text "Awesome!" ]
+    Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
 TODO: Ellie
 
@@ -106,14 +245,14 @@ Glad you asked! As is usually the case, there's more than meets the eye.
 
 ### Older Environments
 
-Our custom element works flawlessly... until we try to run the code using our fancy new `<autonomous-button>` component in Internet Explorer or some ancient mobile browser, a webview - `SyntaxError` or maybe `"customElements" is not defined`. You probably know the drill by now, off to the "browser support" page; [looks very green and ready for showbiz][wc-home] but we remember [the word "polyfill"][wc-polyfills] everybody throws around so that is what catches our eye. Then our eyes glaze over at all the polyfill-o-babble. The gist is that not every browser supports web components out-of-the-box and some implementations are buggy so you need to include a sort-of base library. After we've dutifully included [the custom elements polyfill][wc-polyfill-custom-elements] our code agrees to run inside the mobile browser (and the webview?) but Internet Explorer is relentless, as always - `SyntaxError`, bane of our existence.
+Our custom element works flawlessly... until we try to run the code using our fancy new `<my-element>` component in Internet Explorer or some ancient mobile browser, a webview - `SyntaxError` or maybe `"customElements" is not defined`. You probably know the drill by now, off to the "browser support" page; [looks very green and ready for showbiz][wc-home] but we remember [the word "polyfill"][wc-polyfills] everybody throws around so that is what catches our eye. Then our eyes glaze over at all the polyfill-o-babble. The gist is that not every browser supports web components out-of-the-box and some implementations are buggy so you need to include a sort-of base library. After we've dutifully included [the custom elements polyfill][wc-polyfill-custom-elements] our code agrees to run inside the mobile browser (and the webview?) but Internet Explorer is relentless, as always - `SyntaxError`, bane of our existence.
 
 It turns out that Internet Explorer doesn't support the `class` syntax introduced in ES6, annoying. Because we know that `class` syntax is actually just syntactic sugar for ye olde function constructors and prototype chaining we begrudgingly rewrite our example component.
 
 ```javascript
-function AutonomousButton() {}
-AutonomousButton.prototype = Object.create(HTMLElement.prototype);
-customElements.define("autonomous-button", AutonomousButton);
+function MyElement() {}
+MyElement.prototype = Object.create(HTMLElement.prototype);
+customElements.define("my-element", MyElement);
 ```
 `IE: The custom element constructor did not produce the element being upgraded`, odd. After some more research we [come across the magic incantation][so-custom-elements] that makes our component appear in all browsers. Note that the polyfill detects modern browsers automatically now so we at least don't need to [patch the native implementation manually to work with ES5 style classes][wc-polyfill-custom-elements-es5], it is done for us. This means that per spec native custom element implementations only work with ES6 classes, keep that in mind!
 
@@ -124,17 +263,17 @@ customElements.define("autonomous-button", AutonomousButton);
 ```
 
 ```javascript
-function AutonomousButton() {
+function MyElement() {
     return Reflect.construct(HTMLElement, [], this.constructor);
 }
-AutonomousButton.prototype = Object.create(HTMLElement.prototype);
-AutonomousButton.prototype.constructor = AutonomousButton;
-AutonomousButton.prototype.connectedCallback = function () {
-    this.appendChild(document.createTextNode("Autonomous!"));
+MyElement.prototype = Object.create(HTMLElement.prototype);
+MyElement.prototype.constructor = MyElement;
+MyElement.prototype.connectedCallback = function () {
+    this.appendChild(document.createTextNode("Water!"));
 };
-Object.setPrototypeOf(AutonomousButton, HTMLElement);
+Object.setPrototypeOf(MyElement, HTMLElement);
 
-customElements.define("autonomous-button", AutonomousButton);
+customElements.define("my-element", MyElement);
 ```
 
 I know what you're thinking, I've had that same epiphany, too.
@@ -189,6 +328,7 @@ TODO
 [guide-interop]: https://guide.elm-lang.org/interop/
 [guide-ports]: https://guide.elm-lang.org/interop/ports.html 
 [guide-custom-elements]:https://guide.elm-lang.org/interop/custom_elements.html 
+[mdn-customevent-polyfill]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
 [wc-custom-elements]:https://www.webcomponents.org/specs#the-custom-elements-specification 
 [wc-home]: https://www.webcomponents.org/
 [wc-polyfills]: https://www.webcomponents.org/polyfills 
