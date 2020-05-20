@@ -2,11 +2,14 @@
 
 This document is meant to be a practical usage guide to [the various web components specs][wc-specs] with the goal to provide you with the necessary tools to interop with web APIs that are not yet covered by Elm's core packages. The reason this guide exists is that most tutorials and documentation on web components just dump all the specs and some basic usage examples on you assuming that you already know the intricate details of why specific parts of the spec exist in the first place and what use case they try to solve. This situation can be daunting even for experienced web developers and even more so for newcomers. We aim to be as concise as possible while also providing sufficient information to get you up and running in no time.
 
+## TL;DR
+If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at [the bundling section](#Bundling) where we have collected most of the setups people tend to use for their apps.
+
+## Prerequisites
+
 First-off: if you haven't read [the official Elm guide][guide] you should do so before reading on, of particular note is [the interop section][guide-interop] as this is where the usage of [ports][guide-ports] and [custom elements][guide-custom-elements] is motivated.
 
 Now that you're up to date and positive that using web components is the way to solve the problem at your hands we'll start off with a quick summary of what people mean when they say "just use web components" followed by a rundown of the parts of [the spec][wc-specs] you'll most likely interact with when using Elm. The remainder of the guide is dedicated to getting your app ready for web components in all the browsers you want/need to support.
-
-TODO: TL;DR
 
 ## What are web components and what can I do with them?
 
