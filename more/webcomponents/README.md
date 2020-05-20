@@ -157,7 +157,7 @@ If you need to transfer object data you can use a [property](#Properties).
 Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported.
 
 ```javascript
-customElements.define("twbs-alert", class extends HTMLElement {
+customElements.define("atla-trivia", class extends HTMLElement {
     constructor() {
         // Set up backing fields for your properties
         this._meta = null;
@@ -171,7 +171,7 @@ customElements.define("twbs-alert", class extends HTMLElement {
         return this._meta;
     }
 });
-const element = document.createElement("twbs-alert");
+const element = document.createElement("atla-trivia");
 element.meta = {
     teamAvatar: ["Aang", "Katara", "Soka"],
     seasons: 3,
@@ -189,7 +189,7 @@ import Html.Attributes
 import Json.Encode -- elm install elm/json
 
 element =
-    Html.node "twbs-alert"
+    Html.node "atla-trivia"
         [ Html.Attributes.property "meta"
             (Json.Encode.object
                 [ ( "teamAvatar"
