@@ -63,7 +63,7 @@ view model =
     Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
 
-Let's have a look at the anatomy of a custom element, this should be pretty straight forward for the most part.
+Let's have a look at the anatomy of a custom element. Note that this only covers the part of the API that is most relevant to Elm, we provide links to associated concepts where appropriate.
 
 ### Construction
 
@@ -178,7 +178,7 @@ element.meta = {
 };
 ```
 ```html
-<!-- You can't set properties in raw HTML, sorry -->
+<!-- You can't set properties directly in raw HTML, sorry -->
 ```
 
 With Elm you need to use a JSON encoder provided by the `elm/json` package.
