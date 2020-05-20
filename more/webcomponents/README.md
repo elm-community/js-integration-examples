@@ -131,7 +131,7 @@ customElements.define("twbs-alert", class extends HTMLElement {
         }
     }
 });
-// ...
+
 const element = document.createElement("twbs-alert");
 element.setAttribute("type", "info");
 ```
@@ -171,6 +171,7 @@ customElements.define("atla-trivia", class extends HTMLElement {
         return this._meta;
     }
 });
+
 const element = document.createElement("atla-trivia");
 element.meta = {
     teamAvatar: ["Aang", "Katara", "Soka"],
@@ -207,12 +208,10 @@ element =
 ```
 
 ### Listening to Events
-Custom elements support listening to events like any other built-in element. 
+Custom elements support listening to events like any other built-in element.
 
 ```javascript
 customElements.define("twbs-alert", class extends HTMLElement {
-    constructor() {
-    }
     _handleHighlight(evt) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -225,6 +224,7 @@ customElements.define("twbs-alert", class extends HTMLElement {
         this.removeEventListener("highlight", this._handleHighlight)
     }
 });
+
 const element = document.createElement("twbs-alert");
 document.body.appendChild(element);
 element.dispatchEvent(new CustomEvent("highlight", {
