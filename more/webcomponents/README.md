@@ -59,7 +59,6 @@ This unsurprisingly defines a new HTML element `<my-element>`. Note that the nam
 ```elm
 import Html
 
-view : Model -> Html msg
 view model =
     Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
