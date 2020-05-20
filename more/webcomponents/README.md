@@ -210,9 +210,9 @@ element =
 * [ ] Attrs vs props performance
 * [ ] Handling events
 
-### Events
-TODO
-[mdn-customevent-polyfill][]
+### Going Deeper
+
+If you want to dive deeper into Webcomponents in plain JavaScript the [MDN page about Webcomponents][mdn-wc] is a good place to start.
 
 ### Gotchas
 TODO
