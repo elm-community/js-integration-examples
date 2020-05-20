@@ -206,18 +206,53 @@ element =
         []
 ```
 
+### Listening to Events
+Custom elements support listening to events like any other built-in element. 
+
+```javascript
+customElements.define("twbs-alert", class extends HTMLElement {
+    constructor() {
+    }
+    _handleHighlight(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.classList.add("highlighted");
+    }
+    connectedCallback() {
+        this.addEventListener("highlight", this._handleHighlight)
+    }
+    disconnectedCallback() {
+        this.removeEventListener("highlight", this._handleHighlight)
+    }
+});
+const element = document.createElement("twbs-alert");
+document.body.appendChild(element);
+element.dispatchEvent(new CustomEvent("highlight", {
+    bubbles: true,
+    cancelable: false,
+    detail: { some: "data" },
+}))
+```
+
+_Note that IE needs [a polyfill for CustomEvent][mdn-customevent-polyfill]._
+
+### Triggering Events
+TODO
+
+### Children
+TODO
 
 * [ ] Attrs vs props performance
 * [ ] Handling events
-
-### Going Deeper
-
-If you want to dive deeper into Webcomponents in plain JavaScript the [MDN page about Webcomponents][mdn-wc] is a good place to start.
 
 ### Gotchas
 TODO
 
 And while we're talking about gotchas...
+
+### Going Deeper
+
+If you want to dive deeper into Webcomponents in plain JavaScript the [MDN page about Webcomponents][mdn-wc] is a good place to start.
 
 ## Browser Support
 
@@ -328,6 +363,8 @@ TODO
 [guide-ports]: https://guide.elm-lang.org/interop/ports.html 
 [guide-custom-elements]:https://guide.elm-lang.org/interop/custom_elements.html 
 [mdn-customevent-polyfill]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
+[mdn-slot]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot 
+[mdn-wc]: https://developer.mozilla.org/en-US/docs/Web/Web_Components 
 [wc-custom-elements]:https://www.webcomponents.org/specs#the-custom-elements-specification 
 [wc-home]: https://www.webcomponents.org/
 [wc-polyfills]: https://www.webcomponents.org/polyfills 
