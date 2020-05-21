@@ -29,37 +29,28 @@ To again quote the first paragraph on the [web components specs page][wc-specs]
 
 > These four specifications __can be used on their own__ but combined allow developers to define their own tags (custom element), whose styles are encapsulated and isolated (shadow dom), that can be restamped many times (template), and have a consistent way of being integrated into applications (es module).
 
-I've emphasized the most important information: in order to "use web components" you can and should actually pick and choose what part of the spec you need in order to solve your problem. You don't need to use Shadow DOM, if you don't need style encapsulation. You don't need to use HTML templates, if you already have a templating solution. You don't need ES Modules, if you have a compile-to-js language like, say, *drumroll* Elm. You may find yourself using these specs but they aren't usually necessary in conjuction with Elm.
+I've emphasized the most important information: in order to "use web components" you can and should actually pick and choose what part of the spec you need in order to solve your problem. You don't need to use Shadow DOM, if you don't need style encapsulation. You don't need to use HTML templates, if you already have a templating solution. You don't need ES Modules, if you have a compile-to-js language like, say, *drumroll* Elm. You may find yourself using all of these specs but they aren't usually necessary in conjuction with Elm.
 
-[module-amd]: http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
-[module-commonjs]: http://wiki.commonjs.org/wiki/Modules/1.1.1 
-[module-meteor]: https://docs.meteor.com/api/packagejs.html
-[oop-backbone]: https://github.com/jashkenas/backbone/blob/1.4.0/backbone.js#L398
-[oop-base2]: https://github.com/meritt/base2/blob/1.0/src/base2.js#L59
-[oop-dojo]: https://github.com/dojo/dojo/blob/1.16.2/_base/declare.js
-[oop-ember]: https://github.com/emberjs/ember.js/blob/v3.18.1/packages/@ember/-internals/runtime/lib/system/core_object.js
-[oop-extjs]: https://docs.sencha.com/extjs/6.2.0/modern/Ext.html#method-define
-[oop-yui]: https://github.com/yui/yui3/blob/v3.18.1/src/oop/js/oop.js
-[w3c]: https://www.w3.org/ 
+If you want to dive deeper into Webcomponents in plain JavaScript the [MDN page about Webcomponents][mdn-wc] is a good place to start.
 
 
 ## Custom Elements And Elm
 
 Note that if at this point you skipped the earlier requests to have a look at the [interop section of the Elm guide][guide-interop] I'll try to nudge you again to do so... you may feel nudged now. 
 
-So we've looked at [the specs][wc-specs] and the one I've skipped so far is actually the spec that's most relevant to Elm: [Custom Elements][wc-custom-elements]. Looking at the examples on that page, defining a custom element is easy enough.
+So we've looked at [the specs][wc-specs] and the one we've been dancing around so far is actually the spec that's most relevant to Elm: [Custom Elements][wc-custom-elements]. Looking at the examples on that page, defining a custom element is easy enough.
 
 ```javascript
 class MyElement extends HTMLElement {}
 customElements.define("my-element", MyElement);
 ```
 
-This unsurprisingly defines a new HTML element `<my-element>`. Note that the name *has* to include a hyphen and the class *needs* to extend `HTMLElement`. Here we see the raw power custom elements provide: they let you build your own HTML elements with behavior tailored to your application that are indistinguishable from built-in elements like `<input>` or `<section>`. Which in turn means we can create these kind of elements within Elm without problems, we've done it many times before.
+This unsurprisingly defines a new HTML element `<my-element>`. Note that the name *has* to include a hyphen and the class *needs* to extend `HTMLElement`. Here we see the raw power custom elements provide: they let you build your own HTML elements with behavior tailored to your application that are indistinguishable from built-in elements like `<input>` or `<section>`. Which in turn means we can create these kind of elements within Elm without problems, we've probably done it many times before.
 
 ```elm
 import Html
 
-view model =
+element =
     Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
 
@@ -67,60 +58,61 @@ Let's have a look at the anatomy of a custom element. Note that this only covers
 
 ### Construction
 
-A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript.
+A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript. [demo](https://ellie-app.com/8Vw6BbYYpc4a1)
 
 ```javascript
-customElements.define("twbs-alert", class extends HTMLElement {});
-// ...
-const element = document.createElement("twbs-alert");
+customElements.define("my-element", class extends HTMLElement {});
+
+const element = document.createElement("my-element");
 ```
 ```html
 <!-- Note that custom elements can not be self-closing -->
-<twbs-alert></twbs-alert>
+<my-element></my-element>
 ```
 ```elm
 import Html
 
 btn =
-    Html.node "twbs-alert" [] []
+    Html.node "my-element" [] []
 ```
 
 ### Lifecycles
 
-There are lifecycles you can attach clunkily-named callbacks to.
+There are lifecycles you can attach clunkily-named callbacks to. [demo](https://ellie-app.com/8Vw7J3nFNNma1)
 
 ```javascript
-customElements.define("twbs-alert", class extends HTMLElement {
+customElements.define("i-support-lifecycles", class extends HTMLElement {
     constructor() {
-        // This <twbs-alert> is being initialized, it's not been
-        // added to any document yet but you can initialize
-        // your fields
+        super();
+        // This <i-support-lifecycles> is being initialized, it's not been
+        // added to any document yet but you can initialize your fields but
+        // don't temper with the DOM just yet, do that in `connectedCallback`
     }
     adoptedCallback() {
-        // This <twbs-alert> has been moved to a different document
+        // This <i-support-lifecycles> has been moved to a different document
     }
     connectedCallback() {
-        // This <twbs-alert> has been added to the DOM
+        // This <i-support-lifecycles> has been added to the DOM
     }
     disconnectedCallback() {
-        // This <twbs-alert> has been removed from the DOM
+        // This <i-support-lifecycles> has been removed from the DOM
     }
 });
 ```
 
 ### Attributes
 
-Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values.
+Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values. [demo](https://ellie-app.com/8Vwfz6c5v2wa1)
 
 ```javascript
 customElements.define("twbs-alert", class extends HTMLElement {
-    constructor() {
-        this.classList.add('alert')
-    }
     static get observedAttributes() {
         // We need to declare which attributes should be observed,
         // only these trigger the `attributeChangedCallback`
         return ['type'];
+    }
+    connectedCallback() {
+        this.classList.add('alert');
     }
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
@@ -145,26 +137,25 @@ import Html.Attributes
 element =
     Html.node "twbs-alert"
         [ Html.Attributes.attribute "type" "info"
-        -- or Html.Attributes.type_ "info"
+        -- or alternatively Html.Attributes.type_ "info"
         ]
-        []
+        [ Html.text "This is a Twitter Bootstrap info box"
+        ]
 ```
 
 If you need to transfer object data you can use a [property](#Properties).
 
 ### Properties
 
-Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported.
+Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported. [demo](https://ellie-app.com/8VwjNrnhyKKa1)
 
 ```javascript
 customElements.define("atla-trivia", class extends HTMLElement {
     constructor() {
-        // Set up backing fields for your properties
+        super();
         this._meta = null;
     }
     set meta(value) {
-        // Sometimes it makes sense to "reflect" simple property values
-        // back to corresponding attribute values, if any
         this._meta = value;
     }
     get meta() {
@@ -182,7 +173,7 @@ element.meta = {
 <!-- You can't set properties directly in raw HTML, sorry -->
 ```
 
-With Elm you need to use a JSON encoder provided by the `elm/json` package.
+With Elm you need to use a JSON encoder provided by the [`elm/json`][elmpkg-elm-json] package.
 
 ```elm
 import Html
@@ -250,10 +241,6 @@ TODO
 
 And while we're talking about gotchas...
 
-### Going Deeper
-
-If you want to dive deeper into Webcomponents in plain JavaScript the [MDN page about Webcomponents][mdn-wc] is a good place to start.
-
 ## Browser Support
 
 Looking at our basic example snippets you may have a very valid question
@@ -266,8 +253,7 @@ customElements.define("my-element", MyElement);
 ```elm
 import Html
 
-view : Model -> Html msg
-view model =
+element =
     Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
 TODO: Ellie
@@ -358,13 +344,29 @@ TODO
 
 
 
+[mdn-clipboard]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API 
+[doc-exec-command]: https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand 
+[elmpkg-elm-json]: https://package.elm-lang.org/packages/elm/json
+[jq-event-delegation]: https://learn.jquery.com/events/event-delegation/ 
 [guide]: https://guide.elm-lang.org
 [guide-interop]: https://guide.elm-lang.org/interop/
 [guide-ports]: https://guide.elm-lang.org/interop/ports.html 
 [guide-custom-elements]:https://guide.elm-lang.org/interop/custom_elements.html 
+[html5-apis]: https://developer.mozilla.org/en-US/docs/Web/API 
 [mdn-customevent-polyfill]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
+[mdn-event-bubbling]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture 
 [mdn-slot]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot 
 [mdn-wc]: https://developer.mozilla.org/en-US/docs/Web/Web_Components 
+[module-amd]: http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
+[module-commonjs]: http://wiki.commonjs.org/wiki/Modules/1.1.1 
+[module-meteor]: https://docs.meteor.com/api/packagejs.html
+[oop-backbone]: https://github.com/jashkenas/backbone/blob/1.4.0/backbone.js#L398
+[oop-base2]: https://github.com/meritt/base2/blob/1.0/src/base2.js#L59
+[oop-dojo]: https://github.com/dojo/dojo/blob/1.16.2/_base/declare.js
+[oop-ember]: https://github.com/emberjs/ember.js/blob/v3.18.1/packages/@ember/-internals/runtime/lib/system/core_object.js
+[oop-extjs]: https://docs.sencha.com/extjs/6.2.0/modern/Ext.html#method-define
+[oop-yui]: https://github.com/yui/yui3/blob/v3.18.1/src/oop/js/oop.js
+[w3c]: https://www.w3.org/ 
 [wc-custom-elements]:https://www.webcomponents.org/specs#the-custom-elements-specification 
 [wc-home]: https://www.webcomponents.org/
 [wc-polyfills]: https://www.webcomponents.org/polyfills 
