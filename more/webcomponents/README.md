@@ -419,6 +419,7 @@ Until now all seems hunky-dory in the world of custom elements being embedded wi
 
 ## Gotchas
 TODO
+* shadow dom to hide nodes from Elm
 
 And while we're talking about gotchas...
 
@@ -511,7 +512,7 @@ If we open this in Chrome our button is indeed a button with an orange backgroun
 
 ### Bundling
 
-Speaking of which, let us finally address the elephant in the room. You're probably
+Speaking of which, let us finally address the elephant in the room. At the time of writing this article you're probably using some form of build setup, by choice, custom or force. This section provides a collection of practical setups of Elm with custom elements using a bunch of technologies in use right now to get you up to speed quickly.
 
 TODO
 
@@ -527,10 +528,11 @@ TODO
 
 ## Further Reading
 
+* [Mozilla Developer Network Article on Webcomponents][mdn-wc]
+* [https://webcomponents.org][wc-home]
 * [Alex Korban's A Straight Forwared Introduction to Custom Elements](https://korban.net/posts/elm/2018-09-17-introduction-custom-elements-shadow-dom/)
 
 
-[mdn-clipboard]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API 
 [doc-exec-command]: https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand 
 [elmpkg-elm-json]: https://package.elm-lang.org/packages/elm/json/latest
 [jq-event-delegation]: https://learn.jquery.com/events/event-delegation/ 
@@ -539,6 +541,7 @@ TODO
 [guide-ports]: https://guide.elm-lang.org/interop/ports.html 
 [guide-custom-elements]:https://guide.elm-lang.org/interop/custom_elements.html 
 [html5-apis]: https://developer.mozilla.org/en-US/docs/Web/API 
+[mdn-clipboard]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API 
 [mdn-customevent]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
 [mdn-customevent-polyfill]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
 [mdn-event-bubbling]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture 
