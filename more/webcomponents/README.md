@@ -274,7 +274,7 @@ root =
 
 ### Triggering Events
 
-Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves, as per usual, listening to events from Elm is easy. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package.
+Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves, as per usual, listening to events from Elm is easy. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package or to embed functionality from external JavaScript libraries.
 
 To demonstrate this we build a slightly more involved custom element `<copy-to-clipboard>` that lets the user copy text from an Elm app via button click using the [Document.execCommand API][doc-exec-command]. This is a fairly old non-standard API that's widely supported, nonetheless. The [Clipboard API][mdn-clipboard] is the modern successor, in case you don't need support for older browsers.
 
@@ -403,7 +403,7 @@ _Note that IE needs [a polyfill for CustomEvent][mdn-customevent-polyfill]._
 
 Many Elm apps use this technique to embed libraries like [CodeMirror](https://github.com/ellie-app/ellie/blob/a45637b81e2495ffada12f9a75dd6bb547a69226/assets/src/Ellie/Ui/CodeEditor.js) or [Google Maps](https://package.elm-lang.org/packages/PaackEng/elm-google-maps/latest/).
 
-Until now all seems hunky-dory in the world of custom elements being embedded with Elm but there are some [gotchas](#Gotchas) you need to be aware of we'll take a look at in the next section.
+Until now all seems hunky-dory in the world of custom elements being embedded with Elm but there are some [gotchas](#Gotchas) you need to be aware of. We'll take a look at these in the next section.
 
 ### Gotchas
 TODO
