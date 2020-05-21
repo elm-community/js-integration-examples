@@ -11,27 +11,28 @@
     <script src="https://unpkg.com/@webcomponents/custom-elements"></script>
     <script>
 
-        function AutonomousButton() {
+        function MyElement() {
             return Reflect.construct(HTMLElement, [], this.constructor);
         }
-        AutonomousButton.prototype = Object.create(HTMLElement.prototype);
-        AutonomousButton.prototype.constructor = AutonomousButton;
-        AutonomousButton.prototype.connectedCallback = function () {
+        MyElement.prototype = Object.create(HTMLElement.prototype);
+        MyElement.prototype.constructor = MyElement;
+        MyElement.prototype.connectedCallback = function () {
             this.appendChild(document.createTextNode("Autonomous!"));
         };
-        Object.setPrototypeOf(AutonomousButton, HTMLElement);
+        Object.setPrototypeOf(MyElement, HTMLElement);
 
-        customElements.define("autonomous-button", AutonomousButton);
+        customElements.define("my-element", MyElement);
 
     </script>
     <script type="module">
         // Only for modern browsers
-        customElements.define("autonomous-bla", class extends HTMLElement {
+        customElements.define("another-element", class extends HTMLElement {
             connectedCallback() {
                 this.appendChild(document.createTextNode("Bla!"));
             }
         });
 
+        // Only supported in some modern browsers
         class CustomizedButton extends HTMLButtonElement {
             connectedCallback() {
                 this.style.backgroundColor = "orange";
@@ -41,8 +42,8 @@
             extends: "button",
         });
     </script>
-    <autonomous-button></autonomous-button>
-    <autonomous-bla></autonomous-bla>
+    <my-element></my-element>
+    <another-element></another-element>
     <button is="customized-button">Customized!</button>
 </body>
 
