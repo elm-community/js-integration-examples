@@ -3,7 +3,7 @@
 This document is meant to be a practical usage guide to [the various web components specs][wc-specs] with the goal to provide you with the necessary tools to interop with web APIs that are not yet covered by Elm's core packages. The reason this guide exists is that most tutorials and documentation on web components just dump all the specs and some basic usage examples on you assuming that you already know the intricate details of why specific parts of the spec exist in the first place and what use case they try to solve. This situation can be daunting even for experienced web developers and even more so for newcomers. We aim to be as concise as possible while also providing sufficient information to get you up and running in no time.
 
 ## TL;DR
-If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at [the bundling section](#Bundling) where we have collected most of the setups people tend to use for their apps.
+If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at [the bundling section](#Bundling) where we have collected most of the setups people tend to use for their apps and don't forget to check [the Gotchas section](#Gotchas) so you know how to build custom elements that play nice with Elm.
 
 ## Prerequisites
 
