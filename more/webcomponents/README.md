@@ -264,6 +264,11 @@ button.innerHTML = "Click Me!";
 element.appendChild(button);
 document.body.appendChild(element);
 ```
+```html
+<event-delegator>
+    <button>Click Me!</button>
+</event-delegator>
+```
 
 As we've seen in [the Children section](#Children) building DOM trees with Elm is a breeze. In this example we see both the power and the potential problems with using custom elements in Elm, they allow you to execute arbitrary JavaScript inside your declarative views. So be aware of the fact that a rogue custom element can compromise Elm's runtime guarantees, have a look at [the Gotchas section](#Gotchas) to learn more.
 
@@ -412,7 +417,7 @@ Many Elm apps use this technique to embed libraries like [CodeMirror](https://gi
 
 Until now all seems hunky-dory in the world of custom elements being embedded with Elm but there are some [gotchas](#Gotchas) you need to be aware of. We'll take a look at these in the next section.
 
-### Gotchas
+## Gotchas
 TODO
 
 And while we're talking about gotchas...
