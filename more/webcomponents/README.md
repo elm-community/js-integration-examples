@@ -412,7 +412,7 @@ And while we're talking about gotchas...
 
 ## Browser Support
 
-Looking at our basic example snippets you may have a very valid question. ([demo](https://ellie-app.com/8Vw6BbYYpc4a1) 
+Looking at our basic example snippets you may have a very valid question. ([demo](https://ellie-app.com/8Vw6BbYYpc4a1))
 
 ```javascript
 class MyElement extends HTMLElement {}
@@ -513,7 +513,7 @@ TODO
 ## Conclusion
 TODO
 
-## Links
+## Further Reading
 
 * [Alex Korban's A Straight Forwared Introduction to Custom Elements](https://korban.net/posts/elm/2018-09-17-introduction-custom-elements-shadow-dom/)
 
