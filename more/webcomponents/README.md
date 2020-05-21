@@ -3,7 +3,7 @@
 This document is meant to be a practical usage guide to [the various web components specs][wc-specs] with the goal to provide you with the necessary tools to interop with web APIs that are not yet covered by Elm's core packages. The reason this guide exists is that most tutorials and documentation on web components just dump all the specs and some basic usage examples on you assuming that you already know the intricate details of why specific parts of the spec exist in the first place and what use case they try to solve. This situation can be daunting even for experienced web developers and even more so for newcomers. We aim to be as concise as possible while also providing sufficient information to get you up and running in no time.
 
 ## TL;DR
-If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at [the bundling section](#Bundling) where we have collected most of the setups people tend to use for their apps and don't forget to check [the Gotchas section](#Gotchas) so you know how to build custom elements that play nice with Elm.
+If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at [the browser support section](#Browser-Support), [the bundling section](#Bundling) where we have collected most of the setups people tend to use for their apps and don't forget to check [the Gotchas section](#Gotchas) so you know how to build Webcomponents that play nice with Elm.
 
 ## Prerequisites
 
@@ -197,6 +197,9 @@ element =
         ]
         []
 ```
+
+TODO
+* [ ] Attrs vs Props
 
 ### Children
 As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes. ([demo](https://ellie-app.com/8VwmHKFMYCqa1))
@@ -398,8 +401,9 @@ main =
 
 _Note that IE needs [a polyfill for CustomEvent][mdn-customevent-polyfill]._
 
-TODO
-* [ ] Attrs vs props performance
+Many Elm apps use this technique to embed libraries like [CodeMirror](https://github.com/ellie-app/ellie/blob/a45637b81e2495ffada12f9a75dd6bb547a69226/assets/src/Ellie/Ui/CodeEditor.js) or [Google Maps](https://package.elm-lang.org/packages/PaackEng/elm-google-maps/latest/).
+
+Until now all seems hunky-dory in the world of custom elements being embedded with Elm but there are some [gotchas](#Gotchas) you need to be aware of we'll take a look at in the next section.
 
 ### Gotchas
 TODO
@@ -507,6 +511,12 @@ TODO
     - [ ] Include an elm-live example
 * [ ] Conclusion
 
+## Conclusion
+TODO
+
+## Links
+
+* [Alex Korban's A Straight Forwared Introduction to Custom Elements](https://korban.net/posts/elm/2018-09-17-introduction-custom-elements-shadow-dom/)
 
 
 [mdn-clipboard]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API 
