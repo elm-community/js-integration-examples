@@ -218,6 +218,13 @@ root.appendChild(span);
 root.appendChild(div);
 root.appendChild(plainText);
 ```
+```html
+<tree-root>
+    <span>A span</span>
+    <div>A div</div>
+    Plain text
+</tree-root>
+```
 
 This is equivalent to the following Elm code. Be sure to read up on [the gotchas](#Gotchas) due to Elm's virtual DOM, though.
 
@@ -286,38 +293,38 @@ customElements.define("copy-to-clipboard", class extends HTMLElement {
         return ["text"];
     }
     _handleClick(evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      const text = this.getAttribute("text");
-      this._copy(text);
-      this.dispatchEvent(new CustomEvent("clipboard", {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          copiedText: text,
-        },
-      }));
+        evt.preventDefault();
+        evt.stopPropagation();
+        const text = this.getAttribute("text");
+        this._copy(text);
+        this.dispatchEvent(new CustomEvent("clipboard", {
+            bubbles: true,
+            cancelable: true,
+            detail: {
+                copiedText: text,
+            },
+        }));
     }
     _copy(value) {
-      const preSelected =            
-          document.getSelection().rangeCount > 0
-              ? document.getSelection().getRangeAt(0)
-              : false;
+        const preSelected =            
+            document.getSelection().rangeCount > 0
+                ? document.getSelection().getRangeAt(0)
+                : false;
 
-      const textarea = document.createElement('textarea');
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'absolute';
-      textarea.style.left = '-9999px';
-      textarea.value = value;
-      document.body.appendChild(textarea);
+        const textarea = document.createElement('textarea');
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        textarea.value = value;
+        document.body.appendChild(textarea);
       
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      if (preSelected) {
-          document.getSelection().removeAllRanges();
-          document.getSelection().addRange(preSelected);
-      }
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (preSelected) {
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(preSelected);
+        }
     }
     connectedCallback() {
         this.addEventListener("click", this._handleClick);
