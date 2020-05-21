@@ -230,42 +230,176 @@ subTree =
 ```
 
 ### Listening to Events
-Custom elements support listening to events like any other built-in element.
+Custom elements support listening to events; this is usually not that useful in conjunction with Elm since you can't imperatively trigger events with it. However, it allows you to employ some nifty tricks like [event delegation][jq-event-delegation] where you use the [DOM's event bubbling phase][mdn-event-bubbling] to listen for events that "bubble up" from your custom element's children. [demo](https://ellie-app.com/8Vwpg8T5GDQa1)
 
 ```javascript
-customElements.define("twbs-alert", class extends HTMLElement {
-    _handleHighlight(evt) {
+customElements.define("event-delegator", class extends HTMLElement {
+    _handleInnerClick(evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        this.classList.add("highlighted");
+        alert(`You clicked inside me`);
     }
     connectedCallback() {
-        this.addEventListener("highlight", this._handleHighlight)
+        this.addEventListener("click", this._handleInnerClick)
     }
     disconnectedCallback() {
-        this.removeEventListener("highlight", this._handleHighlight)
+        this.removeEventListener("click", this._handleInnerClick)
     }
 });
 
-const element = document.createElement("twbs-alert");
+const element = document.createElement("event-delegator");
+const button = document.createElement("button");
+button.innerHTML = "Click Me!";
+
+element.appendChild(button);
 document.body.appendChild(element);
-element.dispatchEvent(new CustomEvent("highlight", {
-    bubbles: true,
-    cancelable: false,
-    detail: { some: "data" },
-}))
+```
+
+As we've seen in [the Children section](#Children) building DOM trees with Elm is a breeze. In this example we see both the power and the potential problems with using custom elements in Elm, they allow you to execute arbitrary JavaScript inside your declarative views. So be aware of the fact that a rogue custom element can compromise Elm's runtime guarantees, have a look at [the Gotchas section](#Gotchas) to learn more.
+
+```elm
+import Html
+
+root =
+    Html.node "event-delegator" []
+        [ Html.button [ {- no `onClick` here -} ]
+            [ Html.text "Click Me!"
+            ]
+        ]
+```
+
+
+### Triggering Events
+
+Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves, as per usual, listening to events from Elm is easy. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package.
+
+To demonstrate this we build a slightly more involved custom element `<copy-to-clipboard>` that lets the user copy text from an Elm app via button click using the [Document.execCommand API][doc-exec-command]. This is a fairly old non-standard API that's widely supported, nonetheless. The [Clipboard API] is the modern successor, in case you don't need support for older browsers.
+
+The gist is that our element listens for `click` events from its children, copies the value of its `text` attribute to the clipboard and triggers a `CustomEvent` notifying Elm that the operation has been successful, Elm can also decode event data being passed. [demo](https://ellie-app.com/8VvL6ggT5qJa1)
+
+```javascript
+customElements.define("copy-to-clipboard", class extends HTMLElement {
+    static get observedAttributes() {
+        return ["text"];
+    }
+    _handleClick(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      const text = this.getAttribute("text");
+      this._copy(text);
+      this.dispatchEvent(new CustomEvent("clipboard", {
+        bubbles: true,
+        cancelable: true,
+        detail: {
+          copiedText: text,
+        },
+      }));
+    }
+    _copy(value) {
+      const preSelected =            
+          document.getSelection().rangeCount > 0
+              ? document.getSelection().getRangeAt(0)
+              : false;
+
+      const textarea = document.createElement('textarea');
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      textarea.value = value;
+      document.body.appendChild(textarea);
+      
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      if (preSelected) {
+          document.getSelection().removeAllRanges();
+          document.getSelection().addRange(preSelected);
+      }
+    }
+    connectedCallback() {
+        this.addEventListener("click", this._handleClick);
+    }
+    disconnectedCallback() {
+        this.removeEventListener("click", this._handleClick);
+    }
+});
+```
+```elm
+module Main exposing (main)
+
+import Browser
+import Html exposing (Html)
+import Html.Attributes
+import Html.Events
+import Json.Decode exposing (Decoder)
+
+
+type Msg
+    = CopiedToClipboard String
+
+
+type alias Model =
+    { copied : Maybe String
+    }
+
+
+clipboardEventDecoder : (String -> msg) -> Decoder msg
+clipboardEventDecoder toMsg =
+    Json.Decode.map (\copiedTextFromDetail -> toMsg copiedTextFromDetail)
+        (Json.Decode.at [ "detail", "copiedText" ] Json.Decode.string)
+
+
+view : Model -> Html Msg
+view { copied } =
+    let
+        textToCopy =
+            "Text from Elm"
+    in
+    Html.div []
+        [ Html.node "copy-to-clipboard"
+            [ Html.Attributes.attribute "text" textToCopy
+            , Html.Events.on "clipboard" (clipboardEventDecoder CopiedToClipboard)
+            ]
+            [ Html.button []
+                [ Html.text "Copy "
+                , Html.text ("\"" ++ textToCopy ++ "\"")
+                , Html.text " to clipboard"
+                ]
+            ]
+        , case copied of
+            Just _ ->
+                Html.div []
+                    [ Html.div [] [ Html.text "Copied!" ]
+                    , Html.textarea
+                        [ Html.Attributes.placeholder "Try pasting it in here"
+                        ]
+                        []
+                    ]
+
+            Nothing ->
+                Html.text ""
+        ]
+
+
+update : Msg -> Model -> Model
+update (CopiedToClipboard text) model =
+    { model | copied = Just text }
+
+
+main : Program () Model Msg
+main =
+    Browser.sandbox
+        { init = { copied = Nothing }
+        , update = update
+        , view = view
+        }
+
 ```
 
 _Note that IE needs [a polyfill for CustomEvent][mdn-customevent-polyfill]._
 
-### Triggering Events
 TODO
-
-### Children
-TODO
-
 * [ ] Attrs vs props performance
-* [ ] Handling events
 
 ### Gotchas
 TODO
