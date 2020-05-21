@@ -58,7 +58,7 @@ Let's have a look at the anatomy of a custom element. Note that this only covers
 
 ### Construction
 
-A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript. [demo](https://ellie-app.com/8Vw6BbYYpc4a1)
+A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript. ([demo](https://ellie-app.com/8Vw6BbYYpc4a1))
 
 ```javascript
 customElements.define("my-element", class extends HTMLElement {});
@@ -78,7 +78,7 @@ btn =
 
 ### Lifecycles
 
-There are lifecycles you can attach clunkily-named callbacks to. [demo](https://ellie-app.com/8Vw7J3nFNNma1)
+There are lifecycles you can attach clunkily-named callbacks to. ([demo](https://ellie-app.com/8Vw7J3nFNNma1))
 
 ```javascript
 customElements.define("i-support-lifecycles", class extends HTMLElement {
@@ -102,7 +102,7 @@ customElements.define("i-support-lifecycles", class extends HTMLElement {
 
 ### Attributes
 
-Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values. [demo](https://ellie-app.com/8Vwfz6c5v2wa1)
+Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values. ([demo](https://ellie-app.com/8Vwfz6c5v2wa1))
 
 ```javascript
 customElements.define("twbs-alert", class extends HTMLElement {
@@ -147,7 +147,7 @@ If you need to transfer object data you can use a [property](#Properties).
 
 ### Properties
 
-Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported. [demo](https://ellie-app.com/8VwjNrnhyKKa1)
+Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported. ([demo](https://ellie-app.com/8VwjNrnhyKKa1))
 
 ```javascript
 customElements.define("atla-trivia", class extends HTMLElement {
@@ -199,7 +199,7 @@ element =
 ```
 
 ### Children
-As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes. [demo](https://ellie-app.com/8VwmHKFMYCqa1)
+As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes. ([demo](https://ellie-app.com/8VwmHKFMYCqa1))
 
 ```javascript
 customElements.define("tree-root", class extends HTMLElement {});
@@ -230,7 +230,7 @@ subTree =
 ```
 
 ### Listening to Events
-Custom elements support listening to events; this is usually not that useful in conjunction with Elm since you can't imperatively trigger events with it. However, it allows you to employ some nifty tricks like [event delegation][jq-event-delegation] where you use the [DOM's event bubbling phase][mdn-event-bubbling] to listen for events that "bubble up" from your custom element's children. [demo](https://ellie-app.com/8Vwpg8T5GDQa1)
+Custom elements support listening to events; this is usually not that useful in conjunction with Elm since you can't imperatively trigger events with it. However, it allows you to employ some nifty tricks like [event delegation][jq-event-delegation] where you use the [DOM's event bubbling phase][mdn-event-bubbling] to listen for events that "bubble up" from your custom element's children. ([demo](https://ellie-app.com/8Vwpg8T5GDQa1))
 
 ```javascript
 customElements.define("event-delegator", class extends HTMLElement {
@@ -273,9 +273,9 @@ root =
 
 Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves, as per usual, listening to events from Elm is easy. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package.
 
-To demonstrate this we build a slightly more involved custom element `<copy-to-clipboard>` that lets the user copy text from an Elm app via button click using the [Document.execCommand API][doc-exec-command]. This is a fairly old non-standard API that's widely supported, nonetheless. The [Clipboard API] is the modern successor, in case you don't need support for older browsers.
+To demonstrate this we build a slightly more involved custom element `<copy-to-clipboard>` that lets the user copy text from an Elm app via button click using the [Document.execCommand API][doc-exec-command]. This is a fairly old non-standard API that's widely supported, nonetheless. The [Clipboard API][mdn-clipboard] is the modern successor, in case you don't need support for older browsers.
 
-The gist is that our element listens for `click` events from its children, copies the value of its `text` attribute to the clipboard and triggers a `CustomEvent` notifying Elm that the operation has been successful, Elm can also decode event data being passed. [demo](https://ellie-app.com/8VvL6ggT5qJa1)
+The gist is that our element listens for `click` events from its children, copies the value of its `text` attribute to the clipboard and triggers a [`CustomEvent`][mdn-customevent] notifying Elm that the operation has been successful, Elm can also decode event data being passed. ([demo](https://ellie-app.com/8VvL6ggT5qJa1))
 
 ```javascript
 customElements.define("copy-to-clipboard", class extends HTMLElement {
@@ -511,13 +511,14 @@ TODO
 
 [mdn-clipboard]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API 
 [doc-exec-command]: https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand 
-[elmpkg-elm-json]: https://package.elm-lang.org/packages/elm/json
+[elmpkg-elm-json]: https://package.elm-lang.org/packages/elm/json/latest
 [jq-event-delegation]: https://learn.jquery.com/events/event-delegation/ 
 [guide]: https://guide.elm-lang.org
 [guide-interop]: https://guide.elm-lang.org/interop/
 [guide-ports]: https://guide.elm-lang.org/interop/ports.html 
 [guide-custom-elements]:https://guide.elm-lang.org/interop/custom_elements.html 
 [html5-apis]: https://developer.mozilla.org/en-US/docs/Web/API 
+[mdn-customevent]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
 [mdn-customevent-polyfill]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
 [mdn-event-bubbling]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture 
 [mdn-slot]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot 
