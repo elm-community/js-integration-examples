@@ -198,6 +198,37 @@ element =
         []
 ```
 
+### Children
+As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes. [demo](https://ellie-app.com/8VwmHKFMYCqa1)
+
+```javascript
+customElements.define("tree-root", class extends HTMLElement {});
+
+const root = document.createElement("tree-root");
+const span = document.createElement("span");
+span.innerText = "A span";
+const div = document.createElement("div");
+div.innerText = "A div";
+const plainText = document.createTextNode("Plain text");
+
+root.appendChild(span);
+root.appendChild(div);
+root.appendChild(plainText);
+```
+
+This is equivalent to the following Elm code. Be sure to read up on [the gotchas](#Gotchas) due to Elm's virtual DOM, though.
+
+```elm
+import Html
+
+subTree =
+    Html.node "tree-root" []
+        [ Html.span [] [ Html.text "A span" ]
+        , Html.div [] [ Html.text "A div" ]
+        , Html.text "Plain Text"
+        ]
+```
+
 ### Listening to Events
 Custom elements support listening to events like any other built-in element.
 
