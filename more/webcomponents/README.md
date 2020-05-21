@@ -45,7 +45,7 @@ class MyElement extends HTMLElement {}
 customElements.define("my-element", MyElement);
 ```
 
-This unsurprisingly defines a new HTML element `<my-element>`. Note that the name *has* to include a hyphen and the class *needs* to extend `HTMLElement`. Here we see the raw power custom elements provide: they let you build your own HTML elements with behavior tailored to your application that are indistinguishable from built-in elements like `<input>` or `<section>`. Which in turn means we can create these kind of elements within Elm without problems, we've probably done it many times before.
+This unsurprisingly defines a new HTML element `<my-element>`. Note that the name *has* to include a hyphen and the class *needs* to extend `HTMLElement`. This is what custom elements are about: they let you build your own HTML elements with behavior tailored to your application that are indistinguishable from built-in elements like `<input>` or `<section>`. Which in turn means we can create these kind of elements within Elm without problems, we've probably done it many times before.
 
 ```elm
 import Html
