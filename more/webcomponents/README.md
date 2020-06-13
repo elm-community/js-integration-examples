@@ -56,9 +56,9 @@ element =
 
 Let's have a look at the anatomy of a custom element. Note that this only covers the part of the API that is most relevant to Elm, we provide links to associated concepts where appropriate.
 
-### Construction
+### Construction ([demo](https://ellie-app.com/8Vw6BbYYpc4a1))
 
-A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript. ([demo](https://ellie-app.com/8Vw6BbYYpc4a1))
+A custom element, just like any other built-in element, can be created declaratively using HTML or imperatively using JavaScript.
 
 ```javascript
 customElements.define("my-element", class extends HTMLElement {});
@@ -76,9 +76,9 @@ btn =
     Html.node "my-element" [] []
 ```
 
-### Lifecycles
+### Lifecycles ([demo](https://ellie-app.com/8Vw7J3nFNNma1))
 
-There are lifecycles you can attach clunkily-named callbacks to. ([demo](https://ellie-app.com/8Vw7J3nFNNma1))
+There are lifecycles you can attach clunkily-named callbacks to.
 
 ```javascript
 customElements.define("i-support-lifecycles", class extends HTMLElement {
@@ -100,9 +100,9 @@ customElements.define("i-support-lifecycles", class extends HTMLElement {
 });
 ```
 
-### Attributes
+### Attributes ([demo](https://ellie-app.com/8Vwfz6c5v2wa1))
 
-Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values. ([demo](https://ellie-app.com/8Vwfz6c5v2wa1))
+Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values.
 
 ```javascript
 customElements.define("twbs-alert", class extends HTMLElement {
@@ -145,9 +145,9 @@ element =
 
 If you need to transfer object data you can use a [property](#Properties).
 
-### Properties
+### Properties ([demo](https://ellie-app.com/8VwjNrnhyKKa1))
 
-Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported. ([demo](https://ellie-app.com/8VwjNrnhyKKa1))
+Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported.
 
 ```javascript
 customElements.define("atla-trivia", class extends HTMLElement {
@@ -198,11 +198,8 @@ element =
         []
 ```
 
-TODO
-* [ ] Attrs vs Props
-
-### Children
-As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes. ([demo](https://ellie-app.com/8VwmHKFMYCqa1))
+### Children ([demo](https://ellie-app.com/8VwmHKFMYCqa1))
+As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes.
 
 ```javascript
 customElements.define("tree-root", class extends HTMLElement {});
@@ -239,8 +236,8 @@ subTree =
         ]
 ```
 
-### Listening to Events
-Custom elements support listening to events; this is usually not that useful in conjunction with Elm since you can't imperatively trigger events with it. However, it allows you to employ some nifty tricks like [event delegation][jq-event-delegation] where you use the [DOM's event bubbling phase][mdn-event-bubbling] to listen for events that "bubble up" from your custom element's children. ([demo](https://ellie-app.com/8Vwpg8T5GDQa1))
+### Listening to Events ([demo](https://ellie-app.com/8Vwpg8T5GDQa1))
+Custom elements support listening to events; this is usually not that useful in conjunction with Elm since you can't imperatively trigger events with it. However, it allows you to employ some nifty tricks like [event delegation][jq-event-delegation] where you use the [DOM's event bubbling phase][mdn-event-bubbling] to listen for events that "bubble up" from your custom element's children.
 
 ```javascript
 customElements.define("event-delegator", class extends HTMLElement {
@@ -284,13 +281,13 @@ root =
 ```
 
 
-### Triggering Events
+### Triggering Events ([demo](https://ellie-app.com/8VvL6ggT5qJa1))
 
 Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves, as per usual, listening to events from Elm is easy. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package or to embed functionality from external JavaScript libraries.
 
 To demonstrate this we build a slightly more involved custom element `<copy-to-clipboard>` that lets the user copy text from an Elm app via button click using the [Document.execCommand API][doc-exec-command]. This is a fairly old non-standard API that's widely supported, nonetheless. The [Clipboard API][mdn-clipboard] is the modern successor, in case you don't need support for older browsers.
 
-The gist is that our element listens for `click` events from its children, copies the value of its `text` attribute to the clipboard and triggers a [`CustomEvent`][mdn-customevent] notifying Elm that the operation has been successful, Elm can also decode event data being passed. ([demo](https://ellie-app.com/8VvL6ggT5qJa1))
+The gist is that our element listens for `click` events from its children, copies the value of its `text` attribute to the clipboard and triggers a [`CustomEvent`][mdn-customevent] notifying Elm that the operation has been successful, Elm can also decode event data being passed.
 
 ```javascript
 customElements.define("copy-to-clipboard", class extends HTMLElement {
