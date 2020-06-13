@@ -414,11 +414,23 @@ Many Elm apps use this technique to embed libraries like [CodeMirror](https://gi
 
 Until now all seems hunky-dory in the world of custom elements being embedded with Elm but there are some [gotchas](#Gotchas) you need to be aware of. We'll take a look at these in the next section.
 
+
 ## Gotchas
-TODO
-* shadow dom to hide nodes from Elm
+
+There are some things to keep in mind when employing custom elements in your Elm app.
+
+Elm, like essentially all other virtual-dom based libraries like React and Vue, take full control of the part of the DOM they create. They keep track of the current state of the DOM in the form of an in-memory representation of the tree and assume that what is currently rendered in the real DOM is a pure derivative from this in-memory representation. Some libraries are more forgiving than others with unexpected mutations but if you mess with those nodes too much you risk breaking their assumptions, which in turn will cause runtime exceptions, even in Elm. What that means in practice is that you should adhere to the following rules for your custom elements to play nice with virtual-dom libraries in general.
+
+* 1) Make sure your custom element cleans up after itself via `disconnectedCallback` as Elm may decide to re-create any part of the DOM without notice.
+* 2) This obviously also means that you should not rely on Elm creating your custom element node exactly x amount of times.
+* 3) If your custom element is supposed to receive child nodes from the outside like [in our little event delegation example](#Listening-to-Events) make sure not to add or remove any children as this may confuse Elm's virtual-dom.
+* 4) If your custom element doesn't expect children from the outside you are free to manage the element's child nodes.
+* 5) If you need both external and self-managed children you can "hide" them inside a [Shadow Root][mdn-shadow-dom], Elm won't inspect sub-trees of shadow roots. Note that there are polyfills for the Shadow DOM spec out there that work in older browsers but this API is farely involved so these might slow down the browser significantly and/or have unexpected behavior.
+
+As a side note: you may find that some browser extensions also cause problems with virtual-dom libraries of any kind, if they add, mutate or remove nodes - ad-blockers are notorious for this.
 
 And while we're talking about gotchas...
+
 
 ## Browser Support
 
@@ -542,6 +554,7 @@ TODO
 [mdn-customevent]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
 [mdn-customevent-polyfill]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
 [mdn-event-bubbling]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture 
+[mdn-shadow-dom]: https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM
 [mdn-slot]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot 
 [mdn-wc]: https://developer.mozilla.org/en-US/docs/Web/Web_Components 
 [module-amd]: http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
