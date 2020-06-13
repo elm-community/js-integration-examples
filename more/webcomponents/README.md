@@ -530,6 +530,8 @@ TODO
     - [ ] Include a parcel example
     - [ ] Include a webpack example
     - [ ] Include an elm-live example
+    - [ ] Rollup example
+    - [ ] Snowpack example
 * [ ] Conclusion
 
 ## Conclusion
