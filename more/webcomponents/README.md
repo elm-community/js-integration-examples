@@ -533,7 +533,9 @@ TODO
 * [ ] Conclusion
 
 ## Conclusion
-TODO
+
+In this guide we've discussed the impetus of why webcomponents exist in the first place and what parts of the spec are particularly relevant when working with Elm. We've investigated a number usecases with demos where custom elements come in handy to enhance Elm's vocabulary in terms of not yet natively supported web APIs and interop scenarios with external JavaScript libraries. I hope you now have a fair grasp on these topics so you can confidently incorporate custom elements in your Elm workflow when needed.
+
 
 ## Further Reading
 
