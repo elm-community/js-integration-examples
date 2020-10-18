@@ -11,40 +11,33 @@
     <script src="https://unpkg.com/@webcomponents/custom-elements"></script>
     <script>
 
-        function MyElement() {
+        // Works in IE11+
+        function LegacyElement() {
             return Reflect.construct(HTMLElement, [], this.constructor);
         }
-        MyElement.prototype = Object.create(HTMLElement.prototype);
-        MyElement.prototype.constructor = MyElement;
-        MyElement.prototype.connectedCallback = function () {
-            this.appendChild(document.createTextNode("Autonomous!"));
+        LegacyElement.prototype = Object.create(HTMLElement.prototype);
+        LegacyElement.prototype.constructor = LegacyElement;
+        LegacyElement.prototype.connectedCallback = function () {
+            this.appendChild(document.createTextNode("Shiny!"));
         };
         Object.setPrototypeOf(MyElement, HTMLElement);
 
-        customElements.define("my-element", MyElement);
+        customElements.define("my-element", LegacyElement);
 
     </script>
     <script type="module">
+
         // Only for modern browsers
-        customElements.define("another-element", class extends HTMLElement {
+        customElements.define("modern-element", class extends HTMLElement {
             connectedCallback() {
                 this.appendChild(document.createTextNode("Bla!"));
             }
         });
 
-        // Only supported in some modern browsers
-        class CustomizedButton extends HTMLButtonElement {
-            connectedCallback() {
-                this.style.backgroundColor = "orange";
-            }
-        }
-        customElements.define("customized-button", CustomizedButton, {
-            extends: "button",
-        });
     </script>
-    <my-element></my-element>
-    <another-element></another-element>
-    <button is="customized-button">Customized!</button>
+    <!-- Note that custom elements can not be self-closing -->
+    <legacy-element></legacy-element>
+    <modern-element></modern-element>
 </body>
 
 </html>
