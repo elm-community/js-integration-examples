@@ -18,11 +18,11 @@
         LegacyElement.prototype = Object.create(HTMLElement.prototype);
         LegacyElement.prototype.constructor = LegacyElement;
         LegacyElement.prototype.connectedCallback = function () {
-            this.appendChild(document.createTextNode("Shiny!"));
+            this.appendChild(document.createTextNode("A little rusty!"));
         };
         Object.setPrototypeOf(MyElement, HTMLElement);
 
-        customElements.define("my-element", LegacyElement);
+        customElements.define("legacy-element", LegacyElement);
 
     </script>
     <script type="module">
@@ -30,7 +30,7 @@
         // Only for modern browsers
         customElements.define("modern-element", class extends HTMLElement {
             connectedCallback() {
-                this.appendChild(document.createTextNode("Bla!"));
+                this.appendChild(document.createTextNode("Shiny!"));
             }
         });
 
