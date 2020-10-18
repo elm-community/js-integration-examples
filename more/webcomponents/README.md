@@ -41,7 +41,7 @@ You may find yourself using all of these specs but they aren't usually necessary
 
 At the time of writing this article you're probably using some form of build system for your JavaScript assets, by choice, custom or force. The intricacies of bundling modern web apps is outside the scope of this guide but you can check out [our minimal ES5 compatible setup](minimal-es5-setup.html) that provides the polyfills necessary to use web components with older browsers like Internet Explorer 11.
 
-You can read more about browser support in the [older environments section](#older-environments).
+There is more information available in the [browser support section](#browser-support).
 
 
 ## Custom Elements And Elm
@@ -258,7 +258,7 @@ customElements.define("event-delegator", class extends HTMLElement {
     _handleInnerClick(evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        alert(`You clicked inside me`);
+        alert(`You clicked inside of me`);
     }
     connectedCallback() {
         this.addEventListener("click", this._handleInnerClick)
@@ -297,7 +297,7 @@ root =
 
 ### Triggering Events ([demo](https://ellie-app.com/8VvL6ggT5qJa1))
 
-Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves, listening to events from Elm is easy. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package or to embed functionality from external JavaScript libraries.
+Custom elements [can listen to events](#Listening-to-Events) but they become really useful as soon as they're triggering events themselves. You mainly want to use this as an adapter to give Elm access to [Web APIs][html5-apis] it does not yet support in form of a core package or to embed functionality from external JavaScript libraries.
 
 To demonstrate this we build a slightly more involved custom element `<copy-to-clipboard>` that lets the user copy text from an Elm app via button click using the [Document.execCommand API][doc-exec-command]. This is a fairly old non-standard API that's widely supported, nonetheless. The [Clipboard API][mdn-clipboard] is the modern successor, in case you don't need support for older browsers.
 
@@ -422,7 +422,7 @@ main =
 
 ```
 
-_Note that IE needs [a polyfill for CustomEvent][mdn-customevent-polyfill]._
+_Note that Internet Explorer needs [a polyfill for CustomEvent][mdn-customevent-polyfill]._
 
 Many Elm apps use this technique to embed libraries like [CodeMirror](https://github.com/ellie-app/ellie/blob/a45637b81e2495ffada12f9a75dd6bb547a69226/assets/src/Ellie/Ui/CodeEditor.js) or [Google Maps](https://package.elm-lang.org/packages/PaackEng/elm-google-maps/latest/).
 
@@ -488,7 +488,7 @@ MyElement.prototype = Object.create(HTMLElement.prototype);
 customElements.define("my-element", MyElement);
 ```
 
-`IE: The custom element constructor did not produce the element being upgraded`, odd. After more research we [come across the magic incantation][so-custom-elements] that makes our component appear in all browsers. Note that the polyfill detects modern browsers automatically now so we at least don't need to [patch the native implementation manually to work with ES5 style classes][wc-polyfill-custom-elements-es5].
+Internet Explorer still complains `the custom element constructor did not produce the element being upgraded`, odd. After more research we [come across the magic incantation][so-custom-elements] that makes our component appear in all browsers. Note that the polyfill detects modern browsers automatically now so we at least don't need to [patch the native implementation manually to work with ES5 style classes][wc-polyfill-custom-elements-es5].
 
 This means that per spec native custom element implementations only work with ES6 classes, keep that in mind!
 
@@ -512,7 +512,9 @@ Object.setPrototypeOf(MyElement, HTMLElement);
 customElements.define("my-element", MyElement);
 ```
 
-For cross-browser support you'll need a polyfill for old browsers *and* modern browsers!
+Have a look at the [minimal example setup that works in ECMAScript 5 compliant browsers](minimal-es5-setup.html).
+
+For cross-browser support you'll need a polyfill for old browsers *and* modern browsers! 
 
 And that's not even the whole story. There are other approaches like serving different bundles to different browsers like [Angular 8+ differential loading][ng-differential-loading] does. Which also has problems, having two different code base versions of your app run in older and newer browsers respectively can lead to bugs that are very hard track down.
 
