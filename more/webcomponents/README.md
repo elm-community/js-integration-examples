@@ -10,7 +10,7 @@ This document tries to be as concise as possible, while also providing enough in
 If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at
 * [web components setup](#web-components-setup)
 * [the browser support section](#Browser-Support)
-* don't forget to check [the Gotchas section](#Gotchas) to learn how to build Webcomponents that play nice with Elm.
+* don't forget to check [the gotchas section](#Gotchas) to learn how to build Webcomponents that play nice with Elm.
 
 ## Prerequisites
 
