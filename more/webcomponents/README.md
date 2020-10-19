@@ -39,7 +39,7 @@ You may find yourself using all of these specs but they aren't usually necessary
 
 ## Web Components Setup
 
-At the time of writing this article you're probably using some form of build system for your JavaScript assets, by choice, custom or force. The intricacies of bundling modern web apps is outside the scope of this guide but you can check out [our minimal ES5 compatible setup](minimal-es5-setup.html) that provides the polyfills necessary to use web components with older browsers like Internet Explorer 11.
+At the time of writing this article you're probably using some form of build system for your JavaScript assets, by choice, custom or force. A detailed assessment of bundling modern web apps is outside the scope of this guide but you can check out [our minimal ES5 compatible setup](minimal-es5-setup.html) that provides the polyfills necessary to use web components with older browsers like Internet Explorer 11.
 
 There is more information available in the [browser support section](#browser-support).
 
@@ -86,7 +86,7 @@ const element = document.createElement("my-element");
 ```elm
 import Html
 
-btn =
+myElement =
     Html.node "my-element" [] []
 ```
 
@@ -148,7 +148,7 @@ element.setAttribute("type", "info");
 import Html
 import Html.Attributes
 
-element =
+alert =
     Html.node "twbs-alert"
         [ Html.Attributes.attribute "type" "info"
         -- or alternatively Html.Attributes.type_ "info"
@@ -194,7 +194,7 @@ import Html
 import Html.Attributes
 import Json.Encode -- elm install elm/json
 
-element =
+trivia =
     Html.node "atla-trivia"
         [ Html.Attributes.property "meta"
             (Json.Encode.object
@@ -435,9 +435,9 @@ There are some things to keep in mind when employing custom elements in your Elm
 
 ### Web Components And Virtual DOM
 
-Elm takes full control of the part of the DOM it manages. Like other virtual-dom based libraries it keeps track of the current state of the DOM in the form of an in-memory representation of the tree and assume that what is currently rendered in the real DOM is a pure derivative from this in-memory representation.
+Elm takes full control of the part of the DOM it manages. Like other virtual-dom based libraries it keeps track of the current state of the DOM in the form of an in-memory representation of the tree and assumes that what is currently rendered in the real DOM is a pure derivative from this in-memory representation.
 
-Some libraries are more forgiving than others with unexpected mutations but if you mess with those nodes too much you risk breaking their assumptions, which in turn will cause runtime exceptions, even in Elm. What that means in practice is that you should adhere to the following rules for your custom elements to play nice with virtual-dom libraries in general.
+Some libraries are more forgiving than others with unexpected mutations but if you mess with those nodes too much you risk breaking their invariants, which in turn will cause runtime exceptions, even in Elm. What that means in practice is that you should adhere to the following rules for your custom elements to play nice with virtual-dom libraries in general.
 
 * 1) Make sure your custom element cleans up after itself via `disconnectedCallback` as Elm may decide to re-create any part of the DOM without notice.
 * 2) This also means that you should not rely on Elm creating your custom element node exactly x amount of times.
@@ -465,7 +465,7 @@ customElements.define("my-element", MyElement);
 ```elm
 import Html
 
-element =
+myElement =
     Html.node "my-element" [] [ Html.text "Awesome!" ]
 ```
 
@@ -542,7 +542,7 @@ If we open this in Chrome our button is indeed a button with an orange backgroun
 
 Although there is [a polyfill][customized-polyfill] it's probably best to ignore that part of the spec, it's not safe to use as [is documented in this w3c issue][w3c-nope] and layering polyfills upon polyfills onto each other might have consequences.
 
-Also note that Elm's virtual-dom does not support creating these customized built-ins, see the [#Gotchas section](#gotchas) for more information.
+Also note that Elm's virtual-dom does not support creating these customized built-ins, see the [gotchas section](#gotchas) for more information.
 
 [customized-polyfill]: https://github.com/ungap/custom-elements-builtin 
 [webkit-nope]: https://bugs.webkit.org/show_bug.cgi?id=182671 
