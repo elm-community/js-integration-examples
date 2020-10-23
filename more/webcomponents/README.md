@@ -226,7 +226,7 @@ The reasoning is
 * You can transfer structured data via properties, not just strings
 * It's easier to use a consistent interaction method with custom elements from Elm - just use `Html.Attributes.property` everywhere
 
-On the other hand writing custom elements with attributes only might be more suitable for your use case as they can easily be included in static HTML, hand-written or produced by server-side-rendering.
+On the other hand writing custom elements using only attributes might be more suitable for your use case as they can easily be included in static HTML, hand-written or produced by server-side-rendering.
 
 
 ### Children ([demo](https://ellie-app.com/8VwmHKFMYCqa1))
