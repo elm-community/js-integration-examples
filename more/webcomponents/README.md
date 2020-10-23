@@ -4,7 +4,7 @@ This document is meant to be a practical guide to the somewhat confusing [web co
 
 Most documentation on web components show the spec and basic usage examples, assuming that you already know the intricate details of why specific parts of the spec exist in the first place and what use case they try to solve. This situation can be daunting even for experienced web developers and even more so for newcomers.
 
-This document tries to be as concise as possible, while also providing enough information to get you up and running.
+We try to be as concise as possible, while also providing enough information to get you up and running.
 
 ## TL;DR
 If you are looking for a quick start with Elm, Webcomponents and the setup of choice have a look at
