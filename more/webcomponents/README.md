@@ -118,6 +118,8 @@ customElements.define("i-support-lifecycles", class extends HTMLElement {
 
 Custom elements may declare supported attributes via `observedAttributes` - only attribute names returned from this trigger the `attributeChangedCallback` when changed. Note that attributes can only carry `string` values.
 
+There's also a [discussion on whether to use an attribute or a property](#attributes-vs-properties), if you're not sure which to use.
+
 ```javascript
 customElements.define("twbs-alert", class extends HTMLElement {
     static get observedAttributes() {
@@ -162,6 +164,8 @@ If you need to transfer object data you can use a [property](#Properties).
 ### Properties ([demo](https://ellie-app.com/8VwjNrnhyKKa1))
 
 Custom elements can declare properties via `get` and `set`, most kinds of JavaScript objects are supported.
+
+There's also a [discussion on whether to use an attribute or a property](#attributes-vs-properties), if you're not sure which to use.
 
 ```javascript
 customElements.define("atla-trivia", class extends HTMLElement {
@@ -211,6 +215,19 @@ trivia =
         ]
         []
 ```
+
+### Attributes vs Properties
+For Elm projects a good rule of thumb is
+
+> Use properties unless you want your custom elements to be used from hand-written or server-rendered HTML.
+
+The reasoning is
+* You're interacting with your custom element via JavaScript anyways, so the fact that properties can not be set from raw HTML is usually not an issue
+* You can transfer structured data via properties, not just strings
+* It's easier to use a consistent interaction method with custom elements from Elm - just use `Html.Attributes.property` everywhere
+
+On the other hand writing custom elements with attributes only might be more suitable for your use case as they can easily be included in static HTML, hand-written or produced by server-side-rendering.
+
 
 ### Children ([demo](https://ellie-app.com/8VwmHKFMYCqa1))
 As we've noted a number of times: custom elements are just like regular HTML elements, this includes the ability to be a root node for a sub-tree, your custom element can have child nodes.
