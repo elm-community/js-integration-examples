@@ -221,7 +221,7 @@ For Elm projects a good rule of thumb is
 
 > Use properties unless you want your custom elements to be used from hand-written or server-rendered HTML.
 
-The reasoning is
+The reasoning being
 * You're interacting with your custom element via JavaScript anyways, so the fact that properties can not be set from raw HTML is usually not an issue
 * You can transfer structured data via properties, not just strings
 * It's easier to use a consistent interaction method with custom elements from Elm - just use `Html.Attributes.property` everywhere
