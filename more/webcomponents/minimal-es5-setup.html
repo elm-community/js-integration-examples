@@ -20,7 +20,7 @@
         LegacyElement.prototype.connectedCallback = function () {
             this.appendChild(document.createTextNode("A little rusty!"));
         };
-        Object.setPrototypeOf(MyElement, HTMLElement);
+        Object.setPrototypeOf(LegacyElement, HTMLElement);
 
         customElements.define("legacy-element", LegacyElement);
 
